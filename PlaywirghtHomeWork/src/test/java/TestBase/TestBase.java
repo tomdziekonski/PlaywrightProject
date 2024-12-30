@@ -30,4 +30,3 @@ public class TestBase {
         return page;
     }
 }
-

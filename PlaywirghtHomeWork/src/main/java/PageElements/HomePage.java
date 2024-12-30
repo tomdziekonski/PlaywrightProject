@@ -5,7 +5,6 @@ import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +25,17 @@ public class HomePage extends Base {
     Locator newsletterInputField = page.locator("input[id='newsletter-input']");
     Locator newsletterButton = page.locator("//button[@class='btn btn-default button button-small']");
     Locator newsletterSaved = page.locator("p[class=\"alert alert-success\"]");
+    Locator signIn = page.locator("//div[@class='header_user_info']//a[@class='login']");
+    Locator signInEmailField = page.locator("//input[@id='email']");
+    Locator signInPasswordField = page.locator("//input[@id='passwd']");
+    Locator signInButton = page.locator("//button[@id='SubmitLogin']");
+    Locator blouseDetails = page.locator("//div[@class='product-image-container']");
+    String iFrame = "//iframe[contains(@name, 'fancybox-frame')]";
+    String whiteColor = "//a[@name='White']";
+    Locator buyProduct = page.locator("//p[@id='add_to_cart']//button[@name='Submit']");
+    Locator addToCartConfirmation = page.locator("//*[text()[contains(.,\"Product successfully added to your shopping cart\")]]");
+    Locator proceedToCheckout = page.locator("//a[@title='Proceed to checkout']");
+    Locator logout = page.locator("//a[@class='logout']");
 
     public HomePage(Page page) {
         super(page);
@@ -152,5 +162,40 @@ public class HomePage extends Base {
 
     public Locator getNewsletterSaved() {
         return newsletterSaved;
+    }
+
+    public void signIn(String email, String password) {
+        signIn.click();
+        signInEmailField.type(email);
+        signInPasswordField.type(password);
+        signInButton.click();
+    }
+
+    public Locator getBlouseDetails() {
+        return blouseDetails;
+    }
+
+    public String getIFrame() {
+        return iFrame;
+    }
+
+    public String changeColor() {
+        return whiteColor;
+    }
+
+    public Locator getBuyProduct() {
+        return buyProduct;
+    }
+
+    public Locator getAddToCartConfirmation() {
+        return addToCartConfirmation;
+    }
+
+    public Locator getProceedToCheckout() {
+        return proceedToCheckout;
+    }
+
+    public Locator getLogout() {
+        return logout;
     }
 }

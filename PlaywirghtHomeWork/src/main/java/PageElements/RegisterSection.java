@@ -3,7 +3,6 @@ package PageElements;
 import BaseClass.Base;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-
 import java.util.Random;
 
 public class RegisterSection extends Base {

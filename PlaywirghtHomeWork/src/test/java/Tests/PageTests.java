@@ -1,8 +1,8 @@
 package Tests;
 
-import PageElements.RegisterSection;
+import PageElements.*;
 import TestBase.TestBase;
-import PageElements.HomePage;
+import com.microsoft.playwright.FrameLocator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import java.util.ArrayList;
@@ -85,5 +85,65 @@ public class PageTests extends TestBase {
 
         Assert.assertEquals(Home.getNewsletterSaved().innerText(), " Newsletter : You have successfully subscribed to this newsletter.");
     }
-}
 
+    @Test
+    public void isItPossibleToBuyAProduct() {
+        HomePage Home = new HomePage(getPage());
+        Home.signIn("tester@op.pl", "12345");
+        SignInSection signSection = new SignInSection(getPage());
+        String whichUserIsLoggedIn = signSection.getWhichUserIsLoggedIn().innerText();
+        Assert.assertEquals(whichUserIsLoggedIn, "G g");
+
+        ShippingAddress Shipping = new ShippingAddress(getPage());
+        Shipping.getAddressPage().click();
+        Shipping.getUpdateAddressPage().click();
+        Shipping.getCompanyField().clear();
+        Shipping.getCompanyField().type("companyX");
+        Shipping.getAddressField().clear();
+        Shipping.getAddressField().type("Some Street");
+        Shipping.getCityField().clear();
+        Shipping.getCityField().type("City in Alabama");
+        Shipping.selectState("2");
+        Shipping.getPhoneField().clear();
+        Shipping.getPhoneField().type("666");
+        Shipping.getMobilePhoneField().clear();
+        Shipping.getMobilePhoneField().type("111");
+        Shipping.getPostalCode().clear();
+        Shipping.getPostalCode().type("12345");
+        Shipping.saveShippingInfo();
+
+        Home.search("Blouse");
+        Home.getBlouseDetails().click();
+        FrameLocator iframe = getPage().frameLocator((Home.getIFrame()));
+        iframe.locator(Home.changeColor()).click();
+        iframe.locator(Home.getBuyProduct()).click();
+
+        Assert.assertEquals(Home.getAddToCartConfirmation().innerText().trim(), "Product successfully added to your shopping cart");
+
+        Home.getProceedToCheckout().click();
+        CartSection Cart = new CartSection(getPage());
+        Cart.getCartItemQuantity().clear();
+        Cart.getCartItemQuantity().type("2");
+        Cart.proceedToCheckout();
+        Cart.getAdditionalCommentForm().type("Additional Comment");
+        Cart.getprocessAddress().click();
+        Cart.getAgreeToTermsCheckbox().click();
+        Cart.getProcessShipping().click();
+        Cart.getBankWirePaymentMethod().click();
+        Cart.getprocessAddress().click();
+        Assert.assertEquals(Cart.getConfirmOrder().innerText(), "Your order on My Shop is complete.");
+
+        OrderHistory Order = new OrderHistory(getPage());
+        Order.getOrderHistory().click();
+        Order.getOrderDetails().click();
+
+        Assert.assertEquals(Order.getOrderName().innerText(), "G");
+        Assert.assertEquals(Order.getOrderLastName().innerText(), "g");
+        Assert.assertEquals(Order.getOrderCity().innerText(), "City in Alabama,");
+        Assert.assertEquals(Order.getOrderCountry().innerText(), "United States");
+        Assert.assertEquals(Order.getOrderTotalPrice().innerText(), "$34");
+        Assert.assertEquals(Order.getOrderComment().innerText(), "Additional Comment");
+
+        Home.getLogout().click();
+    }
+}
